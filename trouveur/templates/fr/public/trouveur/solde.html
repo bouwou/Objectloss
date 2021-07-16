@@ -1,0 +1,118 @@
+{% extends 'fr/public/base.html' %}
+
+{% block connect %}
+{% if logged_user is None %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <a href="{% url 'login' %}">Login</a> |
+               <a href="{% url 'register' %}">Register</a>
+          </div>
+</div>
+{% else %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <span>Connect as {{logged_user.username}}</span> |
+               <a href="?action=logout">LogOut</a>
+          </div>
+</div>
+{% endif %}
+
+{% endblock connect %}
+
+{% block content %}
+
+<div class="row">
+     <div class="col-md-2">
+          <a href="{% url 'signaler_objet' %}" class="btn btn-outline-dark ">Signaler objet retrouvé</a>
+     </div>
+     <div class="col-md-2">
+          <a href="{% url 'mes_objets' %}" class="btn btn-outline-dark ">Mes objets</a>
+     </div>
+      <div class="col-md-2">
+              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Solde</a>
+         </div>
+      <div class="col-md-2">
+              <a href="" class="btn btn-outline-dark ">Trouver où déposer</a>
+         </div>
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+</div>
+
+<p><br></p>
+
+<div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="attente" class="col-form-label">Total en attence</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="attente" class="form-control" aria-describedby="" value="{{prix_attente}}">
+  </div>
+  <div class="col-auto">
+    <span id="attente1" class="form-text">
+     Solde pour objets en agence en attente d'être récupéré
+    </span>
+  </div>
+</div>
+
+<p><br></p>
+
+<div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="total" class="col-form-label">Total déjà perçu</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="total" class="form-control" aria-describedby="" value="{{prix_total}}">
+  </div>
+  <div class="col-auto">
+    <span id="total1" class="form-text">
+     Solde déjà perçu par vous
+    </span>
+  </div>
+</div>
+
+
+<p><br></p>
+<h4 class="display-6">Derniers Objets payés</h4>
+
+{% if objets|length > 0 %}
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Type de l'objet</th>
+                <th scope="col">Agence</th>
+                <th scope="col">Date du retrait</th>
+                <th scope="col">Valeur</th>
+            </tr>
+        </thead>
+        <tbody class="table-striped">
+
+        {% for objet in objets_retr %}
+        <tr>
+            <td>{{ objet.numero }}</td>
+            <td>{{ objet.prenom }}</td>
+            <td>{{ objet.nom }}</td>
+            <td>{{ objet.type_objet }}</td>
+            <td>{{ objet.agence }}</td>
+            <td>{{ objet.date_du_retrait }}</td>
+            <td>{{ objet.valeur }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

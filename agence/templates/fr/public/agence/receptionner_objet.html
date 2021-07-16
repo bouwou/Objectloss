@@ -1,0 +1,118 @@
+{% extends 'fr/public/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block connect %}
+{% if logged_user is None %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <a href="{% url 'login' %}">Login</a> |
+               <a href="{% url 'register' %}">Register</a>
+          </div>
+</div>
+{% else %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <span>Connect as {{logged_user.username}}</span> |
+               <a href="?action=logout">LogOut</a>
+          </div>
+</div>
+{% endif %}
+
+{% endblock connect %}
+
+{% block content %}
+{% if username != 'None' %}
+<div class="row">
+     <div class="col-md-2">
+          <a href="" class="btn btn-outline-dark ">Réceptionner des objets</a>
+     </div>
+     <div class="col-md-2">
+          <a href="{% url 'restituer' %}" class="btn btn-outline-dark ">Restituer un objet</a>
+     </div>
+      <div class="col-md-2">
+              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Objets gérés</a>
+         </div>
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="row">
+     <div class="mb-3 col-md-5">
+         <label class="form-label">Saisir identifiant trouveur</label>
+         <input type="text" class="form-control" value="{% if username and username != 'None' %}{{username}}{% endif %}" required name="username" >
+       </div>
+     <div class="col-md-3">
+          <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+</div>
+
+</form>
+{% endif %}
+
+{% if error and error != 'None'  %}
+<p>{{error}}</p>
+{% endif %}
+
+{% if objets|length > 0 %}
+
+<p><br></p>
+<h4 class="display-6">Objets retrouvés</h4>
+
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Type de l'objet</th>
+                <th scope="col">Lieu retrouvé</th>
+                <th scope="col">Situation</th>
+            </tr>
+        </thead>
+        <tbody class="table-striped">
+
+        {% for objet in objets %}
+        <tr>
+            <td>{{ objet.numero }}</td>
+            <td>{{ objet.prenom }}</td>
+            <td>{{ objet.nom }}</td>
+            <td>{{ objet.type_objet }}</td>
+            <td>{{ objet.lieu_trouver }}</td>
+            <td>{{ objet.situation }}</td>
+            <td>
+                <a href="{% url 'signaler_objet_update' objet.id %}" class="btn text-secondary px-0">
+                     Edit
+                </a>
+                <form action="{% url 'valider_reception' objet.id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button class="submit btn">
+                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i> Receptionner
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <a href="" class="btn btn-secondary px-0">
+                     Terminé
+                </a>
+{% elif objets is not None %}
+<p>Pas d'objet trouvé </p>
+{% endif %}
+
+
+{% endblock %}

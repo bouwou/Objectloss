@@ -1,0 +1,128 @@
+{% extends 'fr/public/base.html' %}
+
+{% block connect %}
+{% if logged_user is None %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <a href="{% url 'login' %}">Login</a> |
+               <a href="{% url 'register' %}">Register</a>
+          </div>
+</div>
+{% else %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <span>Connect as {{logged_user.username}}</span> |
+               <a href="?action=logout">LogOut</a>
+          </div>
+</div>
+{% endif %}
+
+{% endblock connect %}
+
+{% block content %}
+
+<div class="row">
+     <div class="col-md-2">
+          <a href="{% url 'signaler_objet' %}" class="btn btn-outline-dark ">Signaler objet retrouvé</a>
+     </div>
+     <div class="col-md-2">
+          <a href="{% url 'mes_objets' %}" class="btn btn-outline-dark ">Mes objets</a>
+     </div>
+      <div class="col-md-2">
+              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Solde</a>
+         </div>
+      <div class="col-md-2">
+              <a href="" class="btn btn-outline-dark ">Trouver où déposer</a>
+         </div>
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+</div>
+
+<p><br></p>
+<h4 class="display-6">Objets retrouvés</h4>
+
+{% if objets|length > 0 %}
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Type de l'objet</th>
+                <th scope="col">Lieu retrouvé</th>
+                <th scope="col">
+                    <a href="{% url 'signaler_objet' %}" class="btn btn-outline-success ">
+                     Add New
+                </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table-striped">
+
+        {% for objet in objets %}
+        <tr>
+            <td>{{ objet.numero }}</td>
+            <td>{{ objet.prenom }}</td>
+            <td>{{ objet.nom }}</td>
+            <td>{{ objet.type_objet }}</td>
+            <td>{{ objet.lieu_trouver }}</td>
+            <td>
+                <a href="{% url 'signaler_objet_update' objet.id %}" class="btn text-secondary px-0">
+                     Edit
+                </a>
+                <form action="{% url 'objet_delete' objet.id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button class="submit btn">
+                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i> Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endif %}
+
+
+<p><br></p>
+<h4 class="display-6">Objets déposés</h4>
+
+{% if objets_retr|length > 0 %}
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Type de l'objet</th>
+                <th scope="col">Lieu retrouvé</th>
+            </tr>
+        </thead>
+        <tbody class="table-striped">
+
+        {% for objet in objets_retr %}
+        <tr>
+            <td>{{ objet.numero }}</td>
+            <td>{{ objet.prenom }}</td>
+            <td>{{ objet.nom }}</td>
+            <td>{{ objet.type_objet }}</td>
+            <td>{{ objet.lieu_trouver }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

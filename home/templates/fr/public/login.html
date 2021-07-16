@@ -1,0 +1,24 @@
+{% extends 'fr/public/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Login</h2>
+{% if error %}
+<p>{{error}}</p>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Username</label>
+    <input type="text" class="form-control" required name="username" >
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input type="password" class="form-control" required name="password">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <hr>
+  <a href="{% url 'register' %}" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> << Créer un compte >></a>
+</form>
+
+{% endblock %}

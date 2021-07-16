@@ -1,0 +1,104 @@
+{% extends 'fr/public/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block connect %}
+{% if logged_user is None %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <a href="{% url 'login' %}">Login</a> |
+               <a href="{% url 'register' %}">Register</a>
+          </div>
+</div>
+{% else %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <span>Connect as {{logged_user.username}}</span> |
+               <a href="?action=logout">LogOut</a>
+          </div>
+</div>
+{% endif %}
+
+{% endblock connect %}
+
+{% block content %}
+
+<form action="" method="post" autocomplete="off">
+     {% csrf_token %}
+     {{ objet_form.type_objet|as_crispy_field }}
+     {{ objet_form.nom_objet|as_crispy_field }}
+     <div class="row">
+          <div class="col-md-6">
+               {{ personne_form.nom|as_crispy_field }}
+          </div>
+          <div class="col-md-6">
+               {{ personne_form.prenom|as_crispy_field }}
+          </div>
+     </div>
+     {{ personne_form.telephone|as_crispy_field }}
+     {{ personne_form.email|as_crispy_field }}
+     <div class="row">
+          <div class="col-md-8">
+               {{ objet_form.lieu_perte|as_crispy_field }}
+          </div>
+          <div class="col-md-4">
+               {{ objet_form.date_perte|as_crispy_field }}
+          </div>
+     </div>
+     {{ personne_form.lieu_de_residence|as_crispy_field }}
+     {{ personne_form.date_naissance|as_crispy_field }}
+     <div class="row">
+          <div class="col-md-6">
+               {{ personne_form.numero_cni|as_crispy_field }}
+          </div>
+          <div class="col-md-6">
+               {{ personne_form.numero_passeport|as_crispy_field }}
+          </div>
+     </div>
+     {{ objet_form.description|as_crispy_field }}
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+     <div class="row">
+          <div class="col-md-8">
+               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
+          </div>
+          <div class="col-md-4">
+               <a href="" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> Back to list</a>
+          </div>
+     </div>
+</form>
+<a href="" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> << Cliquez ici pour signalez un objet retrouvé >></a>
+<div class="row">
+     <hr class="my-4">
+</div>
+<div class="row">
+     <div class="col-md-3">
+          <a href="" class="btn btn-outline-dark ">Infos sur nos services</a>
+     </div>
+     <div class="col-md-3">
+          <a href="" class="btn btn-outline-dark ">Rechercher un objet perdu</a>
+     </div>
+     <div class="col-md-3">
+          <a href="{% url 'trouveur_index' %}" class="btn btn-outline-dark ">Trouveur</a>
+     </div>
+     <div class="col-md-3">
+          <a href="{% url 'agence_index' %}" class="btn btn-outline-dark ">Agence</a>
+     </div>
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+</div>
+
+{% endblock %}

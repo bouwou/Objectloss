@@ -1,0 +1,84 @@
+{% extends 'fr/public/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block connect %}
+{% if logged_user is None %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <a href="{% url 'login' %}">Login</a> |
+               <a href="{% url 'register' %}">Register</a>
+          </div>
+</div>
+{% else %}
+<div class="row">
+     <div class="col-md-9">
+               <p> </p>
+          </div>
+          <div class="col-md-3">
+               <span>Connect as {{logged_user.username}}</span> |
+               <a href="?action=logout">LogOut</a>
+          </div>
+</div>
+{% endif %}
+
+{% endblock connect %}
+
+{% block content %}
+
+<div class="row">
+     <div class="col-md-2">
+          <a href="" class="btn btn-outline-dark ">Signaler objet retrouvé</a>
+     </div>
+     <div class="col-md-2">
+          <a href="{% url 'mes_objets' %}" class="btn btn-outline-dark ">Mes objets</a>
+     </div>
+      <div class="col-md-2">
+              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Solde</a>
+         </div>
+      <div class="col-md-2">
+              <a href="" class="btn btn-outline-dark ">Trouver où déposer</a>
+         </div>
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+</div>
+
+<form action="" method="post" autocomplete="off">
+     {% csrf_token %}
+     {{ objet_form.type_objet|as_crispy_field }}
+     {{ objet_form.nom_objet|as_crispy_field }}
+     {{ objet_form.id_objet|as_crispy_field }}
+     <div class="row">
+          <div class="col-md-6">
+               {{ personne_form.nom|as_crispy_field }}
+          </div>
+          <div class="col-md-6">
+               {{ personne_form.prenom|as_crispy_field }}
+          </div>
+     </div>
+     {{ objet_trouve_form.lieu_trouver|as_crispy_field }}
+     {{ objet_trouve_form.description|as_crispy_field }}
+
+     <div class="row">
+          <br>
+          <p>
+
+          </p>
+     </div>
+     <div class="row">
+          <div class="col-md-8">
+               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
+          </div>
+     </div>
+</form>
+<div class="row">
+     <hr class="my-4">
+</div>
+
+{% endblock %}
