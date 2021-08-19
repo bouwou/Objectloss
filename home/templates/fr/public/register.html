@@ -2,82 +2,153 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h3 class="display-4">Création d'un compte</h3>
-<p><br></p>
-<form>
-  <p>
-    <label for="profileType">Vous êtes :</label>
-    <select id="profileType">
-      <option value="trouveur" {% if form.is_bound and form1.is_bound and form2.is_bound %}
-              selected = "selected" {% endif %}>Trouveur</option>
-      <option value="agence" {% if form3.is_bound and form4.is_bound %}
-              selected = "selected" {% endif %}>Agence</option>
-    </select>
-  </p>
-</form>
+<div class="mx-auto app-login-box col-sm-12 col-md-10 col-lg-9">
+    <div class="app-logo"></div>
+    <h4>
+        <div>Welcome,</div>
+        <span>It only takes a <span
+                class="text-success">few seconds</span> to create your account</span>
+    </h4>
 
-<form method="post" id="trouveurForm">
-  {% csrf_token %}
-     <div class="row">
-          <div class="col-md-6">
-               {{ form1.nom|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ form1.prenom|as_crispy_field }}
-          </div>
-     </div>
-     {{ form.username|as_crispy_field }}
-     {{ form.password|as_crispy_field }}
-     {{ form1.date_naissance|as_crispy_field }}
-     {{ form1.lieu_de_residence|as_crispy_field }}
-     {{ form2.profession|as_crispy_field }}
-     {{ form1.telephone|as_crispy_field }}
-     {{ form1.email|as_crispy_field }}
-     {{ form1.numero_cni|as_crispy_field }}
-     {{ form1.date_delivrance|as_crispy_field }}
-      <input type="hidden" name="profileType" value="trouveur">
+    <div>
+        <form>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="profileType">Vous êtes :</label>
+                        <select id="profileType">
+                            <option value="trouveur" {% if form.is_bound and form1.is_bound and form2.is_bound %}
+                                    selected="selected" {% endif %}>Trouveur
+                            </option>
+                            <option value="agence" {% if form3.is_bound and form4.is_bound %}
+                                    selected="selected" {% endif %}>Agence
+                            </option>
+                        </select>
+                    </div>
+                </div>
 
-     <div class="row">
-          <br>
-          <p>
-
-          </p>
-     </div>
-     <div class="row">
-          <div class="col-md-8">
-               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
-          </div>
-     </div>
-</form>
-
-<form method="post" id="agenceForm">
-  {% csrf_token %}
-  {{ form3.nom|as_crispy_field }}
-  <div class="row">
-          <div class="col-md-6">
-               {{ form3.ville|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ form3.localisation|as_crispy_field }}
-          </div>
-     </div>
-     {{ form4.username|as_crispy_field }}
-     {{ form4.password|as_crispy_field }}
-     {{ form3.telephone|as_crispy_field }}
-     {{ form3.email|as_crispy_field }}
-      <input type="hidden" name="profileType" value="agence">
-
-     <div class="row">
-          <br>
-          <p>
-
-          </p>
-     </div>
-     <div class="row">
-          <div class="col-md-8">
-               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
-          </div>
-     </div>
-</form>
-
+            </div>
+        </form>
+        <form method="post" id="trouveurForm">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.nom|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.prenom|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form.username|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form.password|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.date_naissance|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.lieu_de_residence|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form2.profession|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.telephone|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.email|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.numero_cni|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form1.date_delivrance|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 position-relative form-check">
+                <input type="hidden" name="profileType" value="trouveur">
+            </div>
+            <div class="mt-4 d-flex align-items-center">
+                <div class="ml-auto">
+                    <button type="submit"
+                            class="btn-wide btn-pill btn-shadow btn-hover-shine btn btn-primary btn-lg">
+                        Create Account
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form method="post" id="agenceForm">
+            {% csrf_token %}
+            {{ form3.nom|as_crispy_field }}
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form3.ville|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form3.localisation|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form4.username|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form4.password|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form3.telephone|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        {{ form3.email|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 position-relative form-check">
+                <input type="hidden" name="profileType" value="agence">
+            </div>
+            <div class="mt-4 d-flex align-items-center">
+                <!--<h5 class="mb-0">Already have an account? <a href="javascript:void(0);"
+                                                             class="text-primary">Sign in</a></h5>-->
+                <div class="ml-auto">
+                    <button type="submit"
+                            class="btn-wide btn-pill btn-shadow btn-hover-shine btn btn-primary btn-lg">
+                        Create Account
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
