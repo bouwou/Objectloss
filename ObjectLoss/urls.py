@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('home.urls')),
     path('trouveur/', include('trouveur.urls')),
     path('agence/', include('agence.urls')),
+    path('api_mobile/', include('mobile_api.urls')),
 ]

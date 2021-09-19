@@ -63,12 +63,14 @@ def signaler(request, id=0):
                             type_objet=form2.cleaned_data['type_objet'],
                             id_objet=form2.cleaned_data['id_objet'],
                         )
+                        print(new_objet)
                         new_objet.save()
                         new_objet_trouve = ObjetTrouve(
                             objet=Objet.objects.all().last(),
                             lieu_trouver=form3.cleaned_data['lieu_trouver'],
                             description=form3.cleaned_data['description'],
                         )
+                        print(new_objet_trouve)
                         new_objet_trouve.save()
                     else:
                         form2.save()
@@ -128,7 +130,6 @@ def objets(request):
 
 
         return render(request, 'fr/public/trouveur/mes_objets.html', {'objets': mes_objets, 'objets_retr': mes_objets_retr, 'logged_user': logged_user})
-
 
 def objet_delete(request, id):
     objet = ObjetTrouve.objects.get(pk=id, supprimer=0)
