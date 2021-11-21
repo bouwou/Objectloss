@@ -18,7 +18,7 @@ $(".next").click(function(){
 						//$('.error').show();
 						//$('html, body').animate({scrollTop:0}, 'slow');
 						$(".required").addClass("input-error");
-						//e.preventDefault();
+					 	//e.preventDefault();
 						return;
 					}
 				});
