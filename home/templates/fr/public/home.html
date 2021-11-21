@@ -3,7 +3,7 @@
 
 {% block connect %}
 {% if logged_user is None %}
-<div class="row">
+<div class="row" style="background:transparent">
      <div class="col-md-9">
                <p> </p>
           </div>
@@ -28,53 +28,45 @@
 
 {% block content %}
 
-<form action="" method="post" autocomplete="off">
-     {% csrf_token %}
-     {{ objet_form.type_objet|as_crispy_field }}
-     {{ objet_form.nom_objet|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-6">
-               {{ personne_form.nom|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ personne_form.prenom|as_crispy_field }}
-          </div>
-     </div>
-     {{ personne_form.telephone|as_crispy_field }}
-     {{ personne_form.email|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-8">
-               {{ objet_form.lieu_perte|as_crispy_field }}
-          </div>
-          <div class="col-md-4">
-               {{ objet_form.date_perte|as_crispy_field }}
-          </div>
-     </div>
-     {{ personne_form.lieu_de_residence|as_crispy_field }}
-     {{ personne_form.date_naissance|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-6">
-               {{ personne_form.numero_cni|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ personne_form.numero_passeport|as_crispy_field }}
-          </div>
-     </div>
-     {{ objet_form.description|as_crispy_field }}
-     <div class="row">
-          <br>
-          <p>
-
-          </p>
-     </div>
-     <div class="row">
-          <div class="col-md-8">
-               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
-          </div>
-          <div class="col-md-4">
-               <a href="" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> Back to list</a>
-          </div>
-     </div>
+<!-- multistep form -->
+<form id="msform" action="" method="post" autocomplete="off" data-url="{% url 'home' %}">
+  <!-- progressbar -->
+  <ul id="progressbar">
+    <li class="active">Informations sur l'objet</li>
+    <li>Localisation</li>
+    <li>Informations personnelles</li>
+  </ul>
+  <!-- fieldsets -->
+  <fieldset>
+    <h2 class="fs-title">Signaler un objet perdu</h2>
+    <h3 class="fs-subtitle">This is step 1</h3>
+       {% csrf_token %}
+      {{ objet_form.type_objet|as_crispy_field }}
+    <input type="text" name="nom_objet" id="nom_objet" placeholder="Nom de l'objet" />
+    <input type="text" class="required" name="nom" id="nom" placeholder="Nom" />
+    <input type="text" class="required" name="prenom" id="prenom" placeholder="Prénom" />
+    <input type="text" class="required" name="telephone" id="telephone" placeholder="Téléphone" />
+    <input type="text" name="email" id="email" placeholder="Email" />
+    <input type="button" name="next" class="next action-button" value="Next" />
+  </fieldset>
+  <fieldset>
+    <h2 class="fs-title">Localisation</h2>
+    <h3 class="fs-subtitle">Circonscrir votre zone </h3>
+    <input type="text" name="lieu_perte" id="lieu_perte" placeholder="Lieu de perte" />
+    <input type="date" name="date_perte" id="date_perte" placeholder="Date de perte" />
+    <input type="text" name="lieu_de_residence" id="lieu_de_residence" placeholder="Lieu de résidence" />
+    <input type="button" name="previous" class="previous action-button" value="Previous" />
+    <input type="button" name="next" class="next action-button" value="Next" />
+  </fieldset>
+  <fieldset>
+    <h2 class="fs-title">Informations personnelles</h2>
+    <h3 class="fs-subtitle">Elles resteront confidentielles</h3>
+    <input type="date" name="date_naissance" id="date_naissance" placeholder="Date de naissance" />
+    <input type="text" name="numero_cni" id="numero_cni" placeholder="Numéro CNI" />
+    <textarea name="description" id="description" placeholder="Description situation de perte"></textarea>
+    <input type="button" name="previous" class="previous action-button" value="Previous" />
+    <input type="submit" name="submit" class="submit action-button" value="Submit" />
+  </fieldset>
 </form>
 <a href="" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> << Cliquez ici pour signalez un objet retrouvé >></a>
 <div class="row">

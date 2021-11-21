@@ -9,14 +9,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'home/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
 
     <title>{% block title %} Object Loss {% endblock %}</title>
   </head>
   <body>
-  <div class="container mt-5">
-    <div class="col-md-10 offset-md-1 mt-5">
-      <div class="jumbotron">
-        <h1 class="display-4">Object Loss</h1>
+  <div class="container mt-5" style="background-color:transparent">
+    <div class="col-md-10 offset-md-1 mt-5" style="background-color:transparent">
+      <div class="jumbotron" style="background-color:transparent">
+        <h1 class="display-4" >Object Loss</h1>
         <p class="lead font-italic">Vous avez perdu un objet, n'ayez aucune crainte on le retrouvera pour vous</p>
         {% block connect %}
         {% endblock %}
@@ -31,8 +32,10 @@
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
   <script src="{% static 'home/js/jquery.js' %}"></script>
+  <script src="{% static 'home/js/jquery-easing.js' %}"></script>
   <script src="{% static 'home/js/bootstrap.js' %}"></script>
   <script src="{% static 'home/js/popper.js' %}"></script>
+  <script src="{% static 'home/js/home.js' %}"></script>
   <script type="text/javascript">
     function displayRightForm(){
       if($('#profileType').val() == 'agence'){

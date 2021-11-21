@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import Personne
 from .models import Objet
@@ -180,8 +181,14 @@ def index(request):
         form1 = PersonneForm(request.POST)
         form2 = ObjetForm(request.POST)
 
+
         if form1.is_valid():
             if form2.is_valid():
                 form1.save()
                 form2.save()
-        return render(request, 'fr/public/home.html',{'logged_user': logged_user})
+        if request.POST['type']:
+            form1.save()
+            form2.save()
+            return HttpResponse("Objet enrégistré, vous serrez informé une fois qu'il sera retrouvé")
+        else:
+            return render(request, 'fr/public/home.html',{'logged_user': logged_user})
