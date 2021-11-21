@@ -12,7 +12,7 @@ def index(request):
 
 def receptionner(request, username='', error=''):
 
-    if username is not '':
+    if username != '':
         username = username
     if request.method == 'GET':
         if 'action' in request.GET:
