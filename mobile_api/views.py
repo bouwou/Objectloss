@@ -144,7 +144,7 @@ def register(request):
             print(f'_agence : {_agence}')
             return Response("success")
 
-@csrf_exempt
+# @csrf_exempt
 @api_view(['GET', 'POST'])
 def login(request):
     username = None  # default value
@@ -474,7 +474,7 @@ def receptionner(request):
                     trouveur = Trouveur.objects.get(user=user)
                 except ObjectDoesNotExist:
                     error = 'Trouveur inconnu'
-                    print("Either the blog or entry doesn't exist.")
+                    print("Either the blog or enist.")
                 if trouveur is not None:
                     objets = ObjetTrouve.objects.filter(trouveur=trouveur, objet__situation='trouvé', supprimer=0)
                     i = 1
@@ -529,4 +529,4 @@ def restituer(request):
         }
         objets.append(obj)
         i += 1
-    Response('success')
+    return Response(objets)

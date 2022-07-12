@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'rest_framework',
-    'corsheaders',
+    # 'corsheaders',
     'home',
     'crispy_forms',
     'trouveur',
@@ -89,6 +89,8 @@ DATABASES = {
         'PASSWORD': '',
     }
 }
+
+ALLOWED_HOSTS = ['10.0.2.2', '198.211.99.20', 'localhost', '127.0.0.1']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
