@@ -16,7 +16,7 @@ class Agence(models.Model):
     localisation = models.CharField(max_length=255, blank=True, null=True)
     telephone = models.CharField(max_length=20, blank=True, null=True)
     email = models.CharField(max_length=100, blank=True, null=True)
-    date_creation = models.DateTimeField(blank=True, null=True)
+    date_creation = models.DateTimeField(default=now, blank=True, null=True)
     supprimer = models.IntegerField(default=0, blank=True, null=True)
 
     class Meta:
@@ -35,14 +35,16 @@ class AutreType(models.Model):
 class Objet(models.Model):
     personne = models.ForeignKey('Personne', models.DO_NOTHING, blank=True, null=True)
     type_objet = models.ForeignKey('TypeObjet', models.DO_NOTHING, blank=True, null=True)
+    autre_type = models.ForeignKey('AutreType', models.DO_NOTHING, blank=True, null=True)
     nom_objet = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     statut = models.CharField(max_length=50, blank=True, null=True)
     id_objet = models.CharField(max_length=50, blank=True, null=True)
     situation = models.CharField(max_length=50, blank=True, null=True)
     lieu_perte = models.CharField(max_length=255, blank=True, null=True)
+    lieu_trouver = models.CharField(max_length=255, blank=True, null=True)
     date_perte = models.DateField(blank=True, null=True)
-    date_enregistrement = models.DateTimeField(blank=True, null=True)
+    date_enregistrement = models.DateTimeField(default=now, blank=True, null=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
     supprimer = models.IntegerField(default=0, blank=True, null=True)
 

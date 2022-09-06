@@ -1,104 +1,542 @@
 {% extends 'fr/public/base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
+
+{% block loadfile_css %}
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/datatables.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/sweetalert2.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/ladda-themeless.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/toastr.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/pickadate/classic.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/pickadate/classic.date.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/smart.wizard/smart_wizard_theme_arrows.min.css' %}">
+{% endblock %}
 
 {% block connect %}
 {% if logged_user is None %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <a href="{% url 'login' %}">Login</a> |
-               <a href="{% url 'register' %}">Register</a>
-          </div>
+<div class="dropdown">
+    <a class="btn btn-primary text-white btn-rounded" href="{% url 'login' %}" >Connexion</a>
+</div>
+<div class="dropdown">
+    <div class="user col align-self-end">
+        <button class="btn btn-outline-primary btn-rounded" id="userDropdownRegister" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false" >S'inscrire</button>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownRegister">
+            <a class="dropdown-item" href="{% url 'register_trouveur' %}">Trouveur</a>
+            <a class="dropdown-item" href="{% url 'register_agence' %}">Agence</a>
+        </div>
+    </div>
 </div>
 {% else %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <span>Connect as {{logged_user.username}}</span> |
-               <a href="?action=logout">LogOut</a>
-          </div>
+<div class="dropdown">
+    <div class="user col align-self-end">
+        <img src="{% static 'assets/images/faces/' %}{{logged_user.id}}.jpg" id="userDropdown" alt="" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <div class="dropdown-header">
+                <i class="i-Lock-User mr-1"></i> {{logged_user.username}}
+            </div>
+            <a class="dropdown-item">Account settings</a>
+            <a class="dropdown-item">Billing history</a>
+            <a class="dropdown-item" href="?action=logout">Sign out</a>
+        </div>
+    </div>
 </div>
 {% endif %}
 
 {% endblock connect %}
 
+{% block loadfile_js %}
+<script src="{% static 'assets/js/vendor/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/sweetalert2.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/spin.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/toastr.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/jquery.smartWizard.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/ladda.js' %}"></script>
+<script src="{% static 'assets/js/datatables.script.js' %}"></script>
+<script src="{% static 'assets/js/sweetalert.script.js' %}"></script>
+<script src="{% static 'assets/js/form.validation.script.js' %}"></script>
+<script src="{% static 'assets/js/form.basic.script.js' %}"></script>
+<script src="{% static 'assets/js/ladda.script.js' %}"></script>
+<script src="{% static 'assets/js/toastr.script.js' %}"></script>
+<script src="{% static 'assets/js/es5/script.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/sidebar.large.script.min.js' %}"></script>
+<script src="{% static 'assets/js/smart.wizard.script.js' %}"></script>
+<script src="{% static 'assets/js/vendor/pickadate/picker.js' %}"></script>
+<script src="{% static 'assets/js/vendor/pickadate/picker.date.js' %}"></script>
+<script>
+    $(function () {
+        $(".datepicker").pickadate({
+            onClose: function () {
+                $('.birthday').attr('data', this.get('select', 'yyyy-mm-dd'));
+                console.log(this.get('select', 'yyyy-mm-dd'));
+            }
+        });
+        //var picker = $('.birthday').pickadate('picker');
+        //var date = $('.birthday').val();
+        //if (date != "") picker.set('select', date, {format: 'yyyy-mm-dd'});
+        //console.log(picker.get('select', 'yyyy-mm-dd'));
+    });
+    $(document).ready(function () {
+        //var date = new Date(1983, 1, 1);
+        if ($('#type_select').val() == 'autre') {
+            $('.autre_type').prop('hidden', false);
+            $('.autre_type').prop('required', true);
+        } else {
+            $('.autre_type').prop('hidden', true);
+            $('.autre_type').prop('required', false);
+        }
+        $('#type_select').change(function () {
+            if ($('#type_select').val() == 'autre') {
+                $('.autre_type').prop('hidden', false);
+                $('.autre_type').prop('required', true);
+            } else {
+                $('.autre_type').prop('hidden', true);
+                $('.autre_type').prop('required', false);
+            }
+        });
+        $('#smartwizard').on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
+            if (stepNumber == 0) {
+                var ev0 = document.querySelector("#object-check-form");
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(ev0, function (form) {
+                    if (ev0.checkValidity() === false) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    ev0.classList.add('was-validated');
+                });
+
+            } else if (stepNumber == 1) {
+                var ev1 = document.querySelector("#contact-check-form");
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(ev1, function (form) {
+                    if (ev1.checkValidity() === false) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    ev1.classList.add('was-validated');
+                });
+            } else if (stepNumber == 2) {
+                var ev2 = document.querySelector("#personal-check-form");
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(ev2, function (form) {
+                    if (ev2.checkValidity() === false) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    ev2.classList.add('was-validated');
+                });
+            } else {
+                alert('ne passe pas')
+            }
+        });
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'getobjets' %}",
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                var url = "#";
+                $('#tab_customer').empty();
+                var i = 0;
+                for (var key in response.objets) {
+
+                    var t = $('#zero_configuration_table_customer').DataTable();
+                    t.row.add([
+                        response.objets[key].personne__nom,
+                        response.objets[key].personne__prenom,
+                        response.objets[key].type_objet__nom,
+                        response.objets[key].id_objet,
+                        '<button class="btn btn-info" onClick="charger_objet(' + response.objets[key].id + ')">Charger</button>',
+                    ]).node().id = response.objets[key].id;
+                    t.draw(false);
+                    /*const tr = $("<tr id='"+ response.objets[key].id +"'>" +
+                        "<td>"+ response.objets[key].personne__nom +"</td>" +
+                        "<td>"+ response.objets[key].personne__prenom +"</td>" +
+                        "<td>"+ response.objets[key].type_objet__nom +"</td>" +
+                        "<td>"+ response.objets[key].id_objet +"</td>" +
+                        "</tr>");*/
+                    //t.row.add(tr[0]).draw(false);
+                    i++;
+                }
+            },
+            error: function (responce) {
+                alert("An error code")
+            }
+        })
+    });
+
+    function init_form() {
+        $('#type_select').val('1');
+        $('.autre_type').val('');
+        $('.nom_objet').val('');
+        $('.nom_prop').val('');
+        $('.prenom_prop').val('');
+        $('.phone1').val('');
+        $('.email').val('');
+        $('.lieu_perte').val('');
+        $('.lieu_residence').val('');
+        $('.cni').val('');
+        $('.passeport').val('');
+        $('.description').val('');
+        $('.date_perte').val('');
+        $('.date_naissance').val('');
+    }
+
+    function charger_objet(id) {
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'getobjet' %}" + id,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                for (var key in response.objet) {
+                    $('.type_objet_rtv').val(response.objet[key].type_objet__nom);
+                    $('.nom_objet_rtv').val(response.objet[key].nom_objet);
+                    $('.nom_prop_rtv').val(response.objet[key].personne__nom);
+                    $('.prenom_prop_rtv').val(response.objet[key].personne__prenom);
+                    $('.phone_rtv').val(response.objet[key].personne__telephone);
+                    $('.date_retrouve').val(response.objet[key].date_enregistrement);
+                }
+
+            },
+            error: function (responce) {
+                alert("An error code")
+            }
+        })
+    }
+
+</script>
+{% endblock %}
+
 {% block content %}
 
-<form action="" method="post" autocomplete="off">
-     {% csrf_token %}
-     {{ objet_form.type_objet|as_crispy_field }}
-     {{ objet_form.nom_objet|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-6">
-               {{ personne_form.nom|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ personne_form.prenom|as_crispy_field }}
-          </div>
-     </div>
-     {{ personne_form.telephone|as_crispy_field }}
-     {{ personne_form.email|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-8">
-               {{ objet_form.lieu_perte|as_crispy_field }}
-          </div>
-          <div class="col-md-4">
-               {{ objet_form.date_perte|as_crispy_field }}
-          </div>
-     </div>
-     {{ personne_form.lieu_de_residence|as_crispy_field }}
-     {{ personne_form.date_naissance|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-6">
-               {{ personne_form.numero_cni|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ personne_form.numero_passeport|as_crispy_field }}
-          </div>
-     </div>
-     {{ objet_form.description|as_crispy_field }}
-     <div class="row">
-          <br>
-          <p>
 
-          </p>
-     </div>
-     <div class="row">
-          <div class="col-md-8">
-               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
-          </div>
-          <div class="col-md-4">
-               <a href="" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> Back to list</a>
-          </div>
-     </div>
-</form>
-<a href="" class="btn secondary btn-block btn-lg" ><i class="fas fa-stream"></i> << Cliquez ici pour signalez un objet retrouvé >></a>
-<div class="row">
-     <hr class="my-4">
+<div class="main-content-wrap sidenav-open d-flex flex-column">
+    <div class="breadcrumb">
+        <h1>Datatables</h1>
+        <ul>
+            <li><a href="">UI Kits</a></li>
+            <li>Datatables</li>
+        </ul>
+    </div>
+    <div class="separator-breadcrumb border-top"></div>
+
+    <div class="row mb-4">
+        <div class="col-md-11">
+            <h4>Objet perdu</h4>
+            <p>Vous avez perdu un objet, pas de panique on le retrouvera pour vous !</p>
+        </div>
+        <div class="col-md-1">
+            <a href="#" type="button" class="btn btn-primary btn-icon m-1">
+                <span class="ul-btn__icon"><i class="i-Add-Cart"></i></span>
+                <span class="ul-btn__text">Add Customer</span>
+            </a>
+        </div>
+    </div>
+    <!-- end of row -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Formulaire de perte</div>
+                    <div class="col-md-12">
+                        <!-- SmartWizard html -->
+                        <div id="smartwizard">
+                            <ul>
+                                <li><a href="#step-1">Step 1<br/><small>Informations sur l'objet perdu</small></a></li>
+                                <li><a href="#step-2">Step 2<br/><small>Contact du proprietaire</small></a></li>
+                                <li><a href="#step-3">Step 3<br/><small>Autres informations</small></a></li>
+                            </ul>
+
+                            <div>
+                                <div id="step-1" data="{% url 'home' %}" class="">
+                                    <form class="needs-validation" id="object-check-form" method="POST" data="#"
+                                          data-id="" novalidate>
+                                        <div class="form-group form-row row">
+                                            <label for="type_select"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left ">Type
+                                                objet*:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <select id="type_select" class="form-control object_type">
+                                                    {% for objet in type_objet %}
+                                                    {% if object != None and object.typeobjet_id == objet.id %}
+                                                    <option selected="selected" value="{{objet.id}}">{{objet.nom}}
+                                                    </option>
+                                                    {% else %}
+                                                    <option value="{{objet.id}}">{{objet.nom}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    <option value="autre">Autre</option>
+                                                </select>
+                                                <small id="passwordHelpBlock1" class="custom-form-text form-text ">
+                                                    Selectionner le type d'objet
+                                                </small>
+                                                <input type="text" class="form-control autre_type"
+                                                       placeholder="Entrer le type de l'objet" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid type.
+                                                </div>
+                                            </div>
+
+
+                                            <label for="validationCustom01"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Nom
+                                                objet*:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                {% csrf_token %}
+                                                <input type="text" class="form-control nom_objet"
+                                                       id="validationCustom01"
+                                                       placeholder="Nom de l'objet"
+                                                       value="{% if object and object.prenom_client %}{{object.prenom_client}}{% else %}{% endif %}"
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid object name.
+                                                </div>
+                                            </div>
+                                            <label for="validationCustom02"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Nom
+                                                proprietaire*:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control nom_prop" id="validationCustom02"
+                                                       placeholder="Nom proprietaire de l'objet"
+                                                       value="{% if object and object.nom_client %}{{object.nom_client}}{% else %}{% endif %}"
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid last name.
+                                                </div>
+                                            </div>
+                                            <label for="validationCustom20"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">prenom
+                                                proprietaire*:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control prenom_prop"
+                                                       id="validationCustom20"
+                                                       placeholder="Prenom proprietaire de l'objet"
+                                                       value="{% if object and object.nom_client %}{{object.nom_client}}{% else %}{% endif %}"
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid first name.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="step-2" class="">
+                                    <form class="needs-validation" id="contact-check-form" method="POST" data="#"
+                                          data-id="" novalidate>
+                                        <div class="form-group form-row row">
+                                            <label for="validationCustom06"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Telephone*:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control phone1" id="validationCustom06"
+                                                       placeholder="Main Phone number"
+                                                       value="{% if object and object.telephone1 %}{{object.telephone1}}{% else %}{% endif %}"
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid phone number.
+                                                </div>
+                                            </div>
+                                            <label for="validationCustom07"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Email:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="email" class="form-control email" id="validationCustom07"
+                                                       placeholder="Email"
+                                                       value="{% if object and object.email %}{{object.email}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                            <label for="validationCustom21"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Lieu de
+                                                la
+                                                perte:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control lieu_perte"
+                                                       id="validationCustom21"
+                                                       placeholder="CNI number"
+                                                       value="{% if object and object.numero_cni %}{{object.numero_cni}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                            <label for="validationCustom22"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Date de
+                                                la
+                                                perte:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control datepicker date_perte"
+                                                       id="validationCustom22" placeholder="yyyy-mm-dd"
+                                                       value="{% if object and object.date_naissance %}{{object.date_naissance}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="step-3" class="">
+                                    <form class="needs-validation" id="personal-check-form" method="POST" data="#"
+                                          data-id="" novalidate>
+                                        <div class="form-group form-row row">
+                                            <label for="validationCustom23"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Lieu de
+                                                residence:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control lieu_residence"
+                                                       id="validationCustom23"
+                                                       placeholder="CNI number"
+                                                       value="{% if object and object.numero_cni %}{{object.numero_cni}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                            <label for="validationCustom24"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Date de
+                                                naissance:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control datepicker date_naissance"
+                                                       id="validationCustom24"
+                                                       placeholder="yyyy-mm-dd"
+                                                       value="{% if object and object.date_naissance %}{{object.date_naissance}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                            <label for="validationCustom25"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Numero
+                                                CNI:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control cni" id="validationCustom25"
+                                                       placeholder="CNI number"
+                                                       value="{% if object and object.numero_cni %}{{object.numero_cni}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                            <label for="validationCustom26"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Numero
+                                                passeport:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <input type="text" class="form-control passeport"
+                                                       id="validationCustom26"
+                                                       placeholder="Passport number"
+                                                       value="{% if object and object.date_naissance %}{{object.date_naissance}}{% else %}{% endif %}"
+                                                >
+                                            </div>
+                                            <label for="validationCustom27"
+                                                   class=" col-lg-4 col-form-label custom-form-label text-left">Description:</label>
+                                            <div class="col-lg-6 mb-4">
+                                                <textarea type="text" class="form-control description"
+                                                          id="validationCustom27"></textarea>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+            <div class="card text-left">
+
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Objets retrouves</h4>
+                    <div class="table-responsive">
+                        <table id="zero_configuration_table_customer"
+                               class="display table " style="width:100%">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Nom proprietaire</th>
+                                <th>Prenom proprietaire</th>
+                                <th>Type objet</th>
+                                <th>Id objet</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tab_bcustomer" data-get="#" data-add="#">
+
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Nom proprietaire</th>
+                                <th>Prenom proprietaire</th>
+                                <th>Type objet</th>
+                                <th>Id objet</th>
+                                <th>Actions</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end of col -->
+        <div class="col-md-6 mb-4">
+            <div class="card text-left">
+
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Objet charge</h4>
+                    <div class="form-group form-row row">
+                        <label for="type_select" class=" col-lg-6 col-form-label custom-form-label text-left ">Type
+                            objet:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" disabled class="form-control type_objet_rtv" style="border: none"
+                                   value="">
+                        </div>
+                        <div class="card-title"></div>
+                        <label for="validationCustom101"
+                               class=" col-lg-6 col-form-label custom-form-label text-left">Nom objet:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control nom_objet_rtv" style="border: none"
+                                   id="validationCustom101" value="">
+                        </div>
+                        <label for="validationCustom102"
+                               class=" col-lg-6 col-form-label custom-form-label text-left">Nom
+                            proprietaire:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control nom_prop_rtv" id="validationCustom102">
+                        </div>
+                        <label for="validationCustom120"
+                               class=" col-lg-6 col-form-label custom-form-label text-left">prenom
+                            proprietaire:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control prenom_prop_rtv" id="validationCustom120">
+                        </div>
+                    </div>
+                    <div class="form-group form-row row">
+                        <label for="validationCustom106"
+                               class=" col-lg-6 col-form-label custom-form-label text-left">Telephone:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control phone_rtv" id="validationCustom106">
+                        </div>
+                        <label for="validationCustom121"
+                               class=" col-lg-6 col-form-label custom-form-label text-left">Objet retrouve le:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control date_retrouve" id="validationCustom121">
+                        </div>
+                    </div>
+                    <div class="separator-breadcrumb border-top"></div>
+                    <div class="form-group form-row row">
+                        <label for="validationCustom66"
+                               class=" col-lg-8 col-form-label custom-form-label text-left">Entrer votre numero de
+                            telephone:</label>
+                        <div class="col-lg-4 mb-4">
+                            <input type="text" class="form-control phone_rtv" id="validationCustom66">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <div class="row text-right">
+                        <div class="col-lg-12 ">
+                            <button id="save_obj" class="btn btn-success">Valider</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- end of row -->
+
 </div>
-<div class="row">
-     <div class="col-md-3">
-          <a href="" class="btn btn-outline-dark ">Infos sur nos services</a>
-     </div>
-     <div class="col-md-3">
-          <a href="" class="btn btn-outline-dark ">Rechercher un objet perdu</a>
-     </div>
-     <div class="col-md-3">
-          <a href="{% url 'trouveur_index' %}" class="btn btn-outline-dark ">Trouveur</a>
-     </div>
-     <div class="col-md-3">
-          <a href="{% url 'agence_index' %}" class="btn btn-outline-dark ">Agence</a>
-     </div>
-     <div class="row">
-          <br>
-          <p>
-
-          </p>
-     </div>
-</div>
-
 {% endblock %}
+

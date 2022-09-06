@@ -1,0 +1,72 @@
+{% extends 'fr/public/sign.html' %}
+{% load static %}
+
+{% block content %}
+{% if error %}
+<p>{{error}}</p>
+{% endif %}
+<div class="col-md-6 text-center " style="background-size: cover;background-image: url({% static 'assets/images/photo-long-3.jpg' %})">
+                        <div class="pl-3 auth-right">
+                            <div class="auth-logo text-center mt-4">
+                                <img src="{% static 'assets/images/logo.png' %}" alt="">
+                            </div>
+                            <div class="flex-grow-1"></div>
+                            <div class="w-100 mb-4">
+                                <a class="btn btn-outline-primary btn-block btn-icon-text btn-rounded" href="signin.html">
+                                    <i class="i-Mail-with-At-Sign"></i> Sign in with Email
+                                </a>
+                                <a class="btn btn-outline-google btn-block btn-icon-text btn-rounded">
+                                    <i class="i-Google-Plus"></i> Sign in with Google
+                                </a>
+                                <a class="btn btn-outline-facebook btn-block btn-icon-text btn-rounded">
+                                    <i class="i-Facebook-2"></i> Sign in with Facebook
+                                </a>
+                            </div>
+                            <div class="flex-grow-1"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-4">
+
+                            <h1 class="mb-3 text-18">Sign Up - Agency</h1>
+                            <form class="needs-validation" id="register-agence-form" method="POST" data="{% url 'register_agence' %}" data-login="{% url 'login' %}" novalidate>
+                                <div class="form-group">
+                                    <label for="lastname">Your name</label>
+                                    <input id="lastname" class="form-control form-control-rounded" type="text" required>
+                                    {% csrf_token %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Phone number</label>
+                                    <input id="phone" class="form-control form-control-rounded" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Username</label>
+                                    <input id="username" class="form-control form-control-rounded" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input id="password" class="form-control form-control-rounded" type="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="repassword">Retype password</label>
+                                    <input id="repassword" class="form-control form-control-rounded" type="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">City</label>
+                                    <input id="city" class="form-control form-control-rounded" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Localisation</label>
+                                    <input id="localisation" class="form-control form-control-rounded" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Your email</label>
+                                    <input id="email" class="form-control form-control-rounded" type="email" required>
+                                </div>
+                                <button class="btn btn-primary btn-block btn-rounded mt-3 ladda-label" id="register-agence-submit">Sign Up</button>
+                            </form>
+                        </div>
+                    </div>
+
+{% endblock %}

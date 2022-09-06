@@ -1,84 +1,622 @@
 {% extends 'fr/public/base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
+
+{% block loadfile_css %}
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/datatables.min.css' %}"
+      xmlns="http://www.w3.org/1999/html">
+<link rel="stylesheet" href="{% static 'assets/styles/css/themes/lite-purple.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/sweetalert2.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/ladda-themeless.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/toastr.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/pickadate/classic.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/pickadate/classic.date.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/smart.wizard/smart_wizard_theme_arrows.min.css' %}">
+{% endblock %}
 
 {% block connect %}
 {% if logged_user is None %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <a href="{% url 'login' %}">Login</a> |
-               <a href="{% url 'register' %}">Register</a>
-          </div>
+<div class="dropdown">
+    <a class="btn btn-primary text-white btn-rounded" href="{% url 'login' %}" >Connexion</a>
+</div>
+<div class="dropdown">
+    <div class="user col align-self-end">
+        <button class="btn btn-outline-primary btn-rounded" id="userDropdownRegidter" >S'inscrire</button>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownRegidter">
+            <a class="dropdown-item" href="{% url 'register' %}">Trouveur</a>
+            <a class="dropdown-item" href="{% url 'register' %}">Agence</a>
+        </div>
+    </div>
 </div>
 {% else %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <span>Connect as {{logged_user.username}}</span> |
-               <a href="?action=logout">LogOut</a>
-          </div>
+<div class="dropdown">
+    <div class="user col align-self-end">
+        <img src="{% static 'assets/images/faces/' %}{{logged_user.id}}.jpg" id="userDropdown" alt="" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <div class="dropdown-header">
+                <i class="i-Lock-User mr-1"></i> {{logged_user.username}}
+            </div>
+            <a class="dropdown-item">Account settings</a>
+            <a class="dropdown-item">Billing history</a>
+            <a class="dropdown-item" href="?action=logout">Sign out</a>
+        </div>
+    </div>
 </div>
 {% endif %}
 
 {% endblock connect %}
 
+{% block loadfile_js %}
+<script src="{% static 'assets/js/vendor/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/sweetalert2.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/spin.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/toastr.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/jquery.smartWizard.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/ladda.js' %}"></script>
+<script src="{% static 'assets/js/sweetalert.script.js' %}"></script>
+<script src="{% static 'assets/js/form.validation.script.js' %}"></script>
+<script src="{% static 'assets/js/form.basic.script.js' %}"></script>
+<script src="{% static 'assets/js/ladda.script.js' %}"></script>
+<script src="{% static 'assets/js/toastr.script.js' %}"></script>
+<script src="{% static 'assets/js/es5/script.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/task-manager-list.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/sidebar.large.script.min.js' %}"></script>
+<script src="{% static 'assets/js/smart.wizard.script.js' %}"></script>
+<script src="{% static 'assets/js/vendor/pickadate/picker.js' %}"></script>
+<script src="{% static 'assets/js/vendor/pickadate/picker.date.js' %}"></script>
+<script>
+    $(function () {
+        $(".datepicker").pickadate({
+            onClose: function () {
+                $('.birthday').attr('data', this.get('select', 'yyyy-mm-dd'));
+                console.log(this.get('select', 'yyyy-mm-dd'));
+            }
+        });
+        //var picker = $('.birthday').pickadate('picker');
+        //var date = $('.birthday').val();
+        //if (date != "") picker.set('select', date, {format: 'yyyy-mm-dd'});
+        //console.log(picker.get('select', 'yyyy-mm-dd'));
+    });
+    $(document).ready(function () {
+        //var date = new Date(1983, 1, 1);
+        if ($('#type_select').val() == 'autre') {
+            $('.autre_type').prop('hidden', false);
+            $('.autre_type').prop('required', true);
+        } else {
+            $('.autre_type').prop('hidden', true);
+            $('.autre_type').prop('required', false);
+        }
+        $('#type_select').change(function () {
+            if ($('#type_select').val() == 'autre') {
+                $('.autre_type').prop('hidden', false);
+                $('.autre_type').prop('required', true);
+            } else {
+                $('.autre_type').prop('hidden', true);
+                $('.autre_type').prop('required', false);
+            }
+        });
+    });
+
+    function init_form() {
+        $('#type_select').val('1');
+        $('.autre_type').val('');
+        $('.autre_type').prop('hidden', true);
+        $('.nom_objet').val('');
+        $('.nom_prop').val('');
+        $('.prenom_prop').val('');
+        $('.id_obj').val('');
+        $('.lieu_trouver').val('');
+        $('.description').val('');
+    }
+
+    function charger_objet(id) {
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'getobjet' %}" + id,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                for (var key in response.objet) {
+                    $('.type_objet_rtv').val(response.objet[key].type_objet__nom);
+                    $('.nom_objet_rtv').val(response.objet[key].nom_objet);
+                    $('.nom_prop_rtv').val(response.objet[key].personne__nom);
+                    $('.prenom_prop_rtv').val(response.objet[key].personne__prenom);
+                    $('.phone_rtv').val(response.objet[key].personne__telephone);
+                    $('.date_retrouve').val(response.objet[key].date_enregistrement);
+                }
+
+            },
+            error: function (responce) {
+                alert("An error code")
+            }
+        })
+    }
+
+</script>
+{% endblock %}
+
 {% block content %}
 
-<div class="row">
-     <div class="col-md-2">
-          <a href="" class="btn btn-outline-dark ">Signaler objet retrouvé</a>
-     </div>
-     <div class="col-md-2">
-          <a href="{% url 'mes_objets' %}" class="btn btn-outline-dark ">Mes objets</a>
-     </div>
-      <div class="col-md-2">
-              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Solde</a>
-         </div>
-      <div class="col-md-2">
-              <a href="" class="btn btn-outline-dark ">Trouver où déposer</a>
-         </div>
-     <div class="row">
-          <br>
-          <p>
 
-          </p>
-     </div>
+<div class="main-content-wrap sidenav-open d-flex flex-column">
+    <div class="breadcrumb">
+        <h1>Datatables</h1>
+        <ul>
+            <li><a href="">UI Kits</a></li>
+            <li>Datatables</li>
+        </ul>
+    </div>
+    <div class="separator-breadcrumb border-top"></div>
+
+    <div class="row mb-4">
+        <div class="col-md-11">
+            <h4>Objet Retrouve</h4>
+            <p>Vous avez retrouve un objet, nous vous sommes gres et vous serrez recompenses pour cela !</p>
+        </div>
+        <div class="col-md-1">
+            <a href="#" type="button" class="btn btn-primary btn-icon m-1">
+                <span class="ul-btn__icon"><i class="i-Add-Cart"></i></span>
+                <span class="ul-btn__text">Add Customer</span>
+            </a>
+        </div>
+    </div>
+    <!-- end of row -->
+    <div class="row mb-4" id="task-manager-list">
+    <!-- begin::horizontal-form-layout -->
+    <div class="col-lg-5 mb-4">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h3 class="custom-card-header"> Signalement objet retrouve</h3>
+            </div>
+
+            <div class="card-body">
+                <form class="needs-validation" id="obj-found-form" method="POST" data="{% url 'createobject' %}"
+                      data-id="{% if object %}{{object.id}}{% endif %}"
+                      novalidate>
+                    <div class="card-title">1. Info sur l'objet:</div>
+                    <div class="form-group form-row row">
+                        <label for="type_select" class=" col-lg-4 col-form-label custom-form-label text-left ">Type
+                            objet*:</label>
+                        <div class="col-lg-6 mb-4">
+                            <select id="type_select" class="form-control object_type">
+                                {% for objet in type_objet %}
+                                {% if object != None and object.type_objet.id == objet.id %}
+                                <option selected="selected" value="{{objet.id}}">{{objet.nom}}</option>
+                                {% else %}
+                                <option value="{{objet.id}}">{{objet.nom}}</option>
+                                {% endif %}
+                                {% endfor %}
+                                {% if object != None and object.autre_type != None %}
+                                <option selected="selected" value="autre">Autre</option>
+                                {% else %}
+                                <option value="autre">Autre</option>
+                                {% endif %}
+                            </select>
+                            <input type="text" class="form-control autre_type"
+                                   placeholder="Entrer le type de l'objet"
+                                   value="{% if object and object.autre_type.nom %}{{object.autre_type.nom}}{% else %}{% endif %}"
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a valid type.
+                            </div>
+                        </div>
+
+
+                        <label for="validationCustom01"
+                               class=" col-lg-4 col-form-label custom-form-label text-left">Nom objet*:</label>
+                        <div class="col-lg-6 mb-4">
+                            {% csrf_token %}
+                            <input type="text" class="form-control nom_objet" id="validationCustom01"
+                                   placeholder="Nom de l'objet"
+                                   value="{% if object and object.nom_objet %}{{object.nom_objet}}{% else %}{% endif %}"
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a valid object name.
+                            </div>
+                        </div>
+                        <label for="validationCustom02"
+                               class=" col-lg-4 col-form-label custom-form-label text-left">Id Objet:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control id_obj" id="validationCustom02"
+                                   placeholder="Id de l'objet"
+                                   value="{% if object and object.id_objet %}{{object.id_objet}}{% else %}{% endif %}"
+                            >
+                            <div class="invalid-feedback">
+                                Please provide a valid id object.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-title">2. Info sur la personne:</div>
+
+                    <div class="form-group form-row row">
+                        <label for="validationCustom022"
+                               class=" col-lg-4 col-form-label custom-form-label text-left">Nom
+                            proprietaire*:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control nom_prop" id="validationCustom022"
+                                   placeholder="Nom proprietaire de l'objet"
+                                   value="{% if object and object.personne.nom %}{{object.personne.nom}}{% else %}{% endif %}"
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a valid last name.
+                            </div>
+                        </div>
+                        <label for="validationCustom20"
+                               class=" col-lg-4 col-form-label custom-form-label text-left">prenom
+                            proprietaire*:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control prenom_prop" id="validationCustom20"
+                                   placeholder="Prenom proprietaire de l'objet"
+                                   value="{% if object and object.personne.prenom %}{{object.personne.prenom}}{% else %}{% endif %}"
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a valid first name.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-title">3. Autres infos:</div>
+
+                    <div class="form-group form-row row">
+                        <label for="validationCustom23"
+                               class=" col-lg-4 col-form-label custom-form-label text-left">Ou l'avez vous
+                            retrouvé*:</label>
+                        <div class="col-lg-6 mb-4">
+                            <input type="text" class="form-control lieu_trouver" id="validationCustom23"
+                                   placeholder="Endroit, quartier et ville"
+                                   value="{% if object and object.lieu_trouver %}{{object.lieu_trouver}}{% else %}{% endif %}"
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a valid place.
+                            </div>
+                        </div>
+                        <label for="validationCustom27"
+                               class=" col-lg-4 col-form-label custom-form-label text-left">Description:</label>
+                        <div class="col-lg-6 mb-4">
+                            <textarea type="text" class="form-control description" id="validationCustom27">{% if object and object.description %}{{object.description}}{% else %}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="card-footer mt-3">
+                <div class="mc-footer">
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-6 text-left">
+                            <button class="btn btn-primary ladda-button m-1" id="obj-found-submit"
+                                    data-style="expand-left">
+                                <span class="ladda-label">Submit</span></button>
+                            <button type="button" class="btn btn-outline-secondary m-1">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end::horizontal-form-layout -->
+    <div class="col-lg-7 mb-4">
+        <div class="card" id="card">
+                        <div class="card-header bg-transparent ul-task-manager__header-inline">
+                            <h6 class="card-title task-title">Mes objets</h6>
+                            <div class="headder-elements">
+                                <div class="list-icons">
+                                    <a href="" class="ul-task-manager__list-icon" id="arrow-down"><i class="i-Arrow-Down"></i></a>
+                                    <a href="" class="ul-task-manager__list-icon" id="reload"><i class="i-Repeat-21"></i></a>
+                                    <a href="" class="ul-task-manager__list-icon " id="close-window"><i class="i-Close-Window"></i></a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body" id="card-body">
+                            <div class="search ul-task-manager__search-inline">
+                                <nav class="navbar">
+                                    <form class="form-inline">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label mr-2">Filter:</label>
+                                        <input class="form-control mr-sm-2" id="filterInput" type="search" placeholder="type to filter" aria-label="Search">
+
+                                    </form>
+                                </nav>
+
+
+
+                                <label>
+                                            <span>Show:</span>
+                                            <select>
+                                                <option value="15">15</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="75">75</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </label>
+
+
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="names" class=" table table-bordered custom-sm-width">
+
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Noms et prenoms</th>
+                                            <th scope="col">Type objet</th>
+                                            <th scope="col">Date operation</th>
+                                            <th scope="col">Statut</th>
+                                            <th scope="col">Lieu retrouvé</th>
+                                            <th scope="col">
+                                                <a href="">
+                                                    <span class="checkmarks">
+                                                        <div class="checkmark_stem"></div>
+                                                        <div class="checkmark_kick"></div>
+                                                    </span>
+                                                </a>
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th colspan="7">Objets retrouvés</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="names">
+
+                                        <!----------------------------- tr1 -------------------------------------------->
+                                        <tr id="names">
+                                            <th scope="row" class="head-width">#1</th>
+                                            <td class="collection-item">
+                                                <div class="font-weight-bold"><a href="#">Update User profile page</a></div>
+                                                <div class="text-muted">A small river named Duden flows by their place and supplies it..</div>
+                                            </td>
+                                            <td class="custom-align">
+
+
+                                                <div class="btn-group ">
+                                                    <button class="btn btn-danger custom-btn  btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                         Blocker
+                                                        </button>
+                                                    <div class="dropdown-menu ul-task-manager__dropdown-menu">
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-primary mr-2"></span>Blocker</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-danger mr-2"></span>High Priority</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-warning mr-2"></span>Normal Priority</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-success mr-2 "></span>Low Priority</a>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td class="custom-align">
+                                                <div class="d-inline-flex align-items-center calendar align-middle">
+                                                    <i class="i-Calendar-4"></i>
+                                                    <span class="">12 January 2015</span>
+                                                </div>
+                                            </td>
+                                            <td class="custom-align">
+                                                <select class="custom-select task-manager-list-select" id="inputGroupSelect01">
+                                                    <option selected>Choose...</option>
+                                                    <option value="1">Open</option>
+                                                    <option value="2">On hold</option>
+                                                    <option value="3">Resolved</option>
+                                                    <option value="3">Duplicate</option>
+                                                    <option value="3">Invalid</option>
+                                                    <option value="3">Wontfix</option>
+                                                    <option value="3">Closed</option>
+                                                  </select>
+                                            </td>
+                                            <td class="custom-align">
+
+                                                <img class="rounded-circle m-0 ul-task-manager__avatar " src="/assets/images/faces/1.jpg" alt="">
+                                                <img class="rounded-circle m-0 ul-task-manager__avatar " src="/assets/images/faces/1.jpg" alt="">
+                                                <i class="i-Add  font-custom-table"></i>
+                                            </td>
+                                            <td class="custom-align">
+                                                <span id="menu-toggle" class="">
+
+
+                                                    <div class="dropdown">
+
+                                                            <i data-toggle="dropdown" class="i-Align-Right custom-font-down-arrow"></i>
+
+                                                            <div class="dropdown-menu">
+                                                              <a class="dropdown-item" href="#">Modifier</a>
+                                                              <a class="dropdown-item" href="#">Supprimer</a>
+                                                                <a class="dropdown-item" href="#">Signaler</a>
+                                                            </div>
+                                                    </div>
+
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <!-------------------------------- end of tr1 -------------------------------------->
+                                        <!-- table row 2 -->
+
+                                        <tr>
+                                            <th scope="row">#2</th>
+                                            <td class="collection-item">
+                                                <div class="font-weight-bold"><a href="#">Not Update User profile page</a></div>
+                                                <div class="text-muted">A small river named Duden flows by their place and supplies it..</div>
+                                            </td>
+                                            <td class="custom-align">
+
+                                                <div class="btn-group ">
+                                                    <button class="btn btn-success custom-btn  btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                     Low
+                                                    </button>
+                                                    <div class="dropdown-menu ul-task-manager__dropdown-menu">
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-primary mr-2"></span>Blocker</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-warning  mr-2"></span>High Priority</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-danger  mr-2"></span>Normal Priority</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-info  mr-2 "></span>Low Priority</a>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td class="custom-align">
+                                                <div class="d-inline-flex align-items-center calendar">
+                                                    <i class="i-Calendar-4"></i>
+                                                    <span>12 January 2015</span>
+                                                    <!-- <input size="16" type="text" value="2012-06-15 14:45" readonly class="form_datetime"> -->
+                                                </div>
+                                            </td>
+                                            <td class="custom-align">
+                                                <select class="custom-select task-manager-list-select" id="inputGroupSelect01">
+                                                    <option selected>Choose...</option>
+                                                    <option value="1">Open</option>
+                                                    <option value="2">On hold</option>
+                                                    <option value="3">Resolved</option>
+                                                    <option value="3">Duplicate</option>
+                                                    <option value="3">Invalid</option>
+                                                    <option value="3">Wontfix</option>
+                                                    <option value="3">Closed</option>
+                                                  </select>
+                                            </td>
+                                            <td class="custom-align">
+
+                                                <img class="rounded-circle m-0 ul-task-manager__avatar " src="/assets/images/faces/1.jpg" alt="">
+                                                <img class="rounded-circle m-0 ul-task-manager__avatar " src="/assets/images/faces/1.jpg" alt="">
+                                                <i class="i-Add  font-custom-table"></i>
+                                            </td>
+                                            <td class="custom-align">
+                                                <span id="menu-toggle" class="">
+
+
+                                                        <div class="dropdown">
+
+                                                                <i data-toggle="dropdown" class="i-Align-Right custom-font-down-arrow"></i>
+
+                                                                <div class="dropdown-menu">
+                                                                  <a class="dropdown-item" href="#">Check In</a>
+                                                                  <a class="dropdown-item" href="#">Attach Screenshot 2</a>
+                                                                  <a class="dropdown-item" href="#">Reassign</a>
+                                                                  <a class="dropdown-item" href="#">Edit Task</a>
+                                                                  <a class="dropdown-item" href="#">Remove</a>
+                                                                </div>
+                                                        </div>
+
+                                                    </span>
+                                            </td>
+                                        </tr>
+
+                                        <!-- end of table row 2 -->
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th colspan="7">Objets déposés</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <!-- table row 3 -->
+                                        <tr>
+                                            <th scope="row">#3</th>
+                                            <td class="collection-item">
+                                                <div class="font-weight-bold"><a href="#">Update User profile page</a></div>
+                                                <div class="text-muted">A small river named Duden flows by their place and supplies it..</div>
+                                            </td>
+                                            <td class="custom-align">
+                                                <div class="btn-group ">
+                                                    <button class="btn btn-warning text-white custom-btn  btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                     High
+                                                    </button>
+                                                    <div class="dropdown-menu ul-task-manager__dropdown-menu">
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-primary mr-2"></span>Blocker</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-danger mr-2"></span>High Priority</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-success mr-2"></span>Normal Priority</a>
+                                                        <a class="dropdown-item" href="#"><span class="ul-task-manager__dot bg-warning mr-2 "></span>Low Priority</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="custom-align">
+                                                <div class="d-inline-flex align-items-center calendar">
+                                                    <i class="i-Calendar-4"></i>
+                                                    <span>12 January 2015</span>
+                                                </div>
+                                            </td>
+                                            <td class="custom-align">
+                                                <select class="custom-select task-manager-list-select" id="inputGroupSelect01">
+                                                    <option selected>Choose...</option>
+                                                    <option value="1">Open</option>
+                                                    <option value="2">On hold</option>
+                                                    <option value="3">Resolved</option>
+                                                    <option value="3">Duplicate</option>
+                                                    <option value="3">Invalid</option>
+                                                    <option value="3">Wontfix</option>
+                                                    <option value="3">Closed</option>
+                                                  </select>
+                                            </td>
+                                            <td class="custom-align">
+
+                                                <img class="rounded-circle m-0 ul-task-manager__avatar " src="/assets/images/faces/1.jpg" alt="">
+                                                <img class="rounded-circle m-0 ul-task-manager__avatar " src="/assets/images/faces/1.jpg" alt="">
+                                                <i class="i-Add  font-custom-table"></i>
+                                            </td>
+                                            <td class="custom-align">
+                                                <span id="menu-toggle" class="">
+
+
+                                                        <div class="dropdown">
+
+                                                                <i data-toggle="dropdown" class="i-Align-Right custom-font-down-arrow"></i>
+
+                                                                <div class="dropdown-menu">
+                                                                  <a class="dropdown-item" href="#">Check In</a>
+                                                                  <a class="dropdown-item" href="#">Attach Screenshot 2</a>
+                                                                  <a class="dropdown-item" href="#">Reassign</a>
+                                                                  <a class="dropdown-item" href="#">Edit Task</a>
+                                                                  <a class="dropdown-item" href="#">Remove</a>
+                                                                </div>
+                                                        </div>
+
+                                                    </span>
+                                            </td>
+                                        </tr>
+                                        <!-- end of table row 3 -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+
+                        </div>
+
+                        <div class="card-footer text-muted">
+
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <span> Showing 1 to 25 of 25 entries</span>
+                                </div>
+                                <div class="col">
+                                    <ul class="pagination justify-content-end">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+    </div>
+        </div>
+    <!-- end of row -->
+
 </div>
-
-<form action="" method="post" autocomplete="off">
-     {% csrf_token %}
-     {{ objet_form.type_objet|as_crispy_field }}
-     {{ objet_form.nom_objet|as_crispy_field }}
-     {{ objet_form.id_objet|as_crispy_field }}
-     <div class="row">
-          <div class="col-md-6">
-               {{ personne_form.nom|as_crispy_field }}
-          </div>
-          <div class="col-md-6">
-               {{ personne_form.prenom|as_crispy_field }}
-          </div>
-     </div>
-     {{ objet_trouve_form.lieu_trouver|as_crispy_field }}
-     {{ objet_trouve_form.description|as_crispy_field }}
-
-     <div class="row">
-          <br>
-          <p>
-
-          </p>
-     </div>
-     <div class="row">
-          <div class="col-md-8">
-               <button type="submit" class="btn btn-success btn-block btn-lg" ><i class="fas fa-database"></i> Submit</button>
-          </div>
-     </div>
-</form>
-<div class="row">
-     <hr class="my-4">
-</div>
-
 {% endblock %}

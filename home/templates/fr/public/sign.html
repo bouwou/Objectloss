@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gull - Laravel + Bootstrap 4 admin template</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/styles/css/themes/lite-purple.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/styles/vendor/ladda-themeless.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/styles/vendor/toastr.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/styles/vendor/pickadate/classic.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/styles/vendor/pickadate/classic.date.css' %}">
+</head>
+
+<body class="text-left">
+    <div class="auth-layout-wrap" style="background-image: url({% static 'assets/images/photo-wide-4.jpg' %})">
+        <div class="auth-content">
+            <div class="card o-hidden">
+                <div class="row">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'assets/js/vendor/jquery-3.3.1.min.js' %} "></script>
+    <script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/es5/sidebar.large.script.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/spin.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'assets/js/sweetalert.script.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/es5/script.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/ladda.js' %}"></script>
+    <script src="{% static 'assets/js/sweetalert.script.js' %}"></script>
+    <script src="{% static 'assets/js/form.validation.script.js' %}"></script>
+    <script src="{% static 'assets/js/ladda.script.js' %}"></script>
+    <script src="{% static 'assets/js/toastr.script.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/pickadate/picker.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/pickadate/picker.date.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+        //console.log('pass22');
+        $(".datepicker").pickadate({
+            onClose: function () {
+                $('#birthday').attr('data', this.get('select', 'yyyy-mm-dd'));
+                console.log(this.get('select', 'yyyy-mm-dd'));
+            }
+        });
+        //console.log('pass');
+
+    });
+    </script>
+</body>
+
+</html>

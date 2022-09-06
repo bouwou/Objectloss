@@ -1,118 +1,131 @@
 {% extends 'fr/public/base.html' %}
+{% load static %}
 
-{% block connect %}
-{% if logged_user is None %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <a href="{% url 'login' %}">Login</a> |
-               <a href="{% url 'register' %}">Register</a>
-          </div>
-</div>
-{% else %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <span>Connect as {{logged_user.username}}</span> |
-               <a href="?action=logout">LogOut</a>
-          </div>
-</div>
-{% endif %}
+{% block loadfile_css %}
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/datatables.min.css' %}"
+      xmlns="http://www.w3.org/1999/html">
+<link rel="stylesheet" href="{% static 'assets/styles/css/themes/lite-purple.min.css' %}">
+{% endblock %}
 
-{% endblock connect %}
+{% block loadfile_js %}
+<script src="{% static 'assets/js/vendor/echarts.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/apexcharts.dataseries.js' %}"></script>
+<script src="{% static 'assets/js/es5/echart.options.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/script.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/dashboard.v1.script.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/echarts.script.js' %}"></script>
+<script src="{% static 'assets/js/es5/apexMixChart.script.js' %}"></script>
+<script src="{% static 'assets/js/es5/sidebar.large.script.min.js' %}"></script>
+<script>
+
+    $(document).ready(function () {
+
+    });
+
+</script>
+{% endblock %}
 
 {% block content %}
+<div class="main-content-wrap sidenav-open d-flex flex-column">
+    <div class="breadcrumb">
+        <h1 class="mr-2">Version 1</h1>
+        <ul>
+            <li><a href="">Dashboard</a></li>
+            <li>Version 1</li>
+        </ul>
+    </div>
 
-<div class="row">
-     <div class="col-md-2">
-          <a href="{% url 'signaler_objet' %}" class="btn btn-outline-dark ">Signaler objet retrouvé</a>
-     </div>
-     <div class="col-md-2">
-          <a href="{% url 'mes_objets' %}" class="btn btn-outline-dark ">Mes objets</a>
-     </div>
-      <div class="col-md-2">
-              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Solde</a>
-         </div>
-      <div class="col-md-2">
-              <a href="" class="btn btn-outline-dark ">Trouver où déposer</a>
-         </div>
-     <div class="row">
-          <br>
-          <p>
+    <div class="separator-breadcrumb border-top"></div>
 
-          </p>
-     </div>
+    <div class="row">
+        <!-- ICON BG -->
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                <div class="card-body text-center">
+                    <i class="i-Money-Bag"></i>
+                    <div class="content">
+                        <p class="text-muted mt-2 mb-0">Solde total</p>
+                        <p class="text-primary text-24 line-height-1 mb-2">205</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                <div class="card-body text-center">
+                    <i class="i-Financial"></i>
+                    <div class="content">
+                        <p class="text-muted mt-2 mb-0">Solde payé</p>
+                        <p class="text-primary text-24 line-height-1 mb-2">$4021</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                <div class="card-body text-center">
+                    <i class="i-Checkout-Basket"></i>
+                    <div class="content">
+                        <p class="text-muted mt-2 mb-0">Objets</p>
+                        <p class="text-primary text-24 line-height-1 mb-2">80</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                <div class="card-body text-center">
+                    <i class="i-Money-2"></i>
+                    <div class="content">
+                        <p class="text-muted mt-2 mb-0">En attente</p>
+                        <p class="text-primary text-24 line-height-1 mb-2">$1200</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Solde en attente & paye</div>
+                    <div id="echartBar" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Gain genere
+                    </div>
+                    <div id="lineColumnArea"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Objets trouves par semaine</div>
+                    <div id="basicLine" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Objets par type</div>
+                    <div id="stackedPie" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<p><br></p>
-
-<div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="attente" class="col-form-label">Total en attence</label>
-  </div>
-  <div class="col-auto">
-    <input type="text" id="attente" class="form-control" aria-describedby="" value="{{prix_attente}}">
-  </div>
-  <div class="col-auto">
-    <span id="attente1" class="form-text">
-     Solde pour objets en agence en attente d'être récupéré
-    </span>
-  </div>
-</div>
-
-<p><br></p>
-
-<div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="total" class="col-form-label">Total déjà perçu</label>
-  </div>
-  <div class="col-auto">
-    <input type="text" id="total" class="form-control" aria-describedby="" value="{{prix_total}}">
-  </div>
-  <div class="col-auto">
-    <span id="total1" class="form-text">
-     Solde déjà perçu par vous
-    </span>
-  </div>
-</div>
-
-
-<p><br></p>
-<h4 class="display-6">Derniers Objets payés</h4>
-
-{% if objets|length > 0 %}
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Type de l'objet</th>
-                <th scope="col">Agence</th>
-                <th scope="col">Date du retrait</th>
-                <th scope="col">Valeur</th>
-            </tr>
-        </thead>
-        <tbody class="table-striped">
-
-        {% for objet in objets_retr %}
-        <tr>
-            <td>{{ objet.numero }}</td>
-            <td>{{ objet.prenom }}</td>
-            <td>{{ objet.nom }}</td>
-            <td>{{ objet.type_objet }}</td>
-            <td>{{ objet.agence }}</td>
-            <td>{{ objet.date_du_retrait }}</td>
-            <td>{{ objet.valeur }}</td>
-        </tr>
-        {% endfor %}
-
-        </tbody>
-    </table>
-{% endif %}
-
 {% endblock %}
