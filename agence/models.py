@@ -57,6 +57,7 @@ class ObjetDelivre(models.Model):
     autre_personne = models.CharField(max_length=255, blank=True, null=True)
     date_delivrance = models.DateField(default=now, blank=True, null=True)
     contact = models.CharField(max_length=255, blank=True, null=True)
+    message = models.CharField(max_length=255, blank=True, null=True)
     supprimer = models.IntegerField(default=0, blank=True, null=True)
 
     class Meta:

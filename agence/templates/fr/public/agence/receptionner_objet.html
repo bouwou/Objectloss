@@ -1,118 +1,288 @@
 {% extends 'fr/public/base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
+
+{% block loadfile_css %}
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/datatables.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/css/themes/lite-purple.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/sweetalert2.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/ladda-themeless.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/styles/vendor/toastr.css' %}">
+{% endblock %}
 
 {% block connect %}
 {% if logged_user is None %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <a href="{% url 'login' %}">Login</a> |
-               <a href="{% url 'register' %}">Register</a>
-          </div>
+<div class="dropdown">
+    <a class="btn btn-primary text-white btn-rounded" href="{% url 'login' %}">Connexion</a>
+</div>
+<div class="dropdown">
+    <div class="user col align-self-end">
+        <button class="btn btn-outline-primary btn-rounded" id="userDropdownRegister" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">S'inscrire
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownRegister">
+            <a class="dropdown-item" href="{% url 'register_trouveur' %}">Trouveur</a>
+            <a class="dropdown-item" href="{% url 'register_agence' %}">Agence</a>
+        </div>
+    </div>
 </div>
 {% else %}
-<div class="row">
-     <div class="col-md-9">
-               <p> </p>
-          </div>
-          <div class="col-md-3">
-               <span>Connect as {{logged_user.username}}</span> |
-               <a href="?action=logout">LogOut</a>
-          </div>
+<div class="dropdown">
+    <div class="user col align-self-end">
+        <img src="{% static 'assets/images/faces/' %}{{logged_user.id}}.jpg" id="userDropdown" alt=""
+             data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <div class="dropdown-header">
+                <i class="i-Lock-User mr-1"></i> {{logged_user.username}}
+            </div>
+            <a class="dropdown-item">Account settings</a>
+            <a class="dropdown-item">Billing history</a>
+            <a class="dropdown-item" href="?action=logout">Sign out</a>
+        </div>
+    </div>
 </div>
 {% endif %}
 
 {% endblock connect %}
 
-{% block content %}
-{% if username != 'None' %}
-<div class="row">
-     <div class="col-md-2">
-          <a href="" class="btn btn-outline-dark ">Réceptionner des objets</a>
-     </div>
-     <div class="col-md-2">
-          <a href="{% url 'restituer' %}" class="btn btn-outline-dark ">Restituer un objet</a>
-     </div>
-      <div class="col-md-2">
-              <a href="{% url 'solde' %}" class="btn btn-outline-dark ">Objets gérés</a>
-         </div>
-     <div class="row">
-          <br>
-          <p>
+{% block loadfile_js %}
+<script src="{% static 'assets/js/vendor/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/sweetalert2.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/spin.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/toastr.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/ladda.js' %}"></script>
+<script src="{% static 'assets/js/sweetalert.script.js' %}"></script>
+<script src="{% static 'assets/js/form.validation.script.js' %}"></script>
+<script src="{% static 'assets/js/form.basic.script.js' %}"></script>
+<script src="{% static 'assets/js/ladda.script.js' %}"></script>
+<script src="{% static 'assets/js/toastr.script.js' %}"></script>
+<script src="{% static 'assets/js/es5/script.min.js' %}"></script>
+<script src="{% static 'assets/js/es5/sidebar.large.script.min.js' %}"></script>
+<script>
 
-          </p>
-     </div>
-</div>
+    $(document).ready(function () {
+        //var date = new Date(1983, 1, 1);
 
-<form method="post">
-  {% csrf_token %}
-  <div class="row">
-     <div class="mb-3 col-md-5">
-         <label class="form-label">Saisir identifiant trouveur</label>
-         <input type="text" class="form-control" value="{% if username and username != 'None' %}{{username}}{% endif %}" required name="username" >
-       </div>
-     <div class="col-md-3">
-          <button type="submit" class="btn btn-primary">Submit</button>
-     </div>
-</div>
+        $('.checkbox-agence').change(function () {
+            var checkboxes = $('input:checkbox:checked'). length;
+            $('.number_check').html(checkboxes);
+        });
 
-</form>
-{% endif %}
+        var erreur = $('#phone_trouveur').attr('data')
+        if ( erreur != '') {
+            let timerInterval;
+        swal({
+            type: 'error',
+            title: erreur,
+            cancelButtonColor: '#FF586B',
+            html: 'Vous serrez redirectionne dans <strong>3</strong> seconds.',
+            timer: 3000
+        }).then(function () {
+            swal(
+                'Deleted!',
+                'Your imaginary file has been deleted.',
+                'success'
+            )
+            var link = $('#phone_trouveur').attr('data-url');
+                            window.location.href = link;
+        }, function (dismiss) {
+            // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
+            if (dismiss === 'timer' || dismiss === 'cancel') {
 
-{% if error and error != 'None'  %}
-<p>{{error}}</p>
-{% endif %}
-
-{% if objets|length > 0 %}
-
-<p><br></p>
-<h4 class="display-6">Objets retrouvés</h4>
-
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Type de l'objet</th>
-                <th scope="col">Lieu retrouvé</th>
-                <th scope="col">Situation</th>
-            </tr>
-        </thead>
-        <tbody class="table-striped">
-
-        {% for objet in objets %}
-        <tr>
-            <td>{{ objet.numero }}</td>
-            <td>{{ objet.prenom }}</td>
-            <td>{{ objet.nom }}</td>
-            <td>{{ objet.type_objet }}</td>
-            <td>{{ objet.lieu_trouver }}</td>
-            <td>{{ objet.situation }}</td>
-            <td>
-                <a href="{% url 'signaler_objet_update' objet.id %}" class="btn text-secondary px-0">
-                     Edit
-                </a>
-                <form action="{% url 'valider_reception' objet.id %}" method="post" class="d-inline">
-                    {% csrf_token %}
-                    <button class="submit btn">
-                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i> Receptionner
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-
-        </tbody>
-    </table>
-    <a href="" class="btn btn-secondary px-0">
-                     Terminé
-                </a>
-{% elif objets is not None %}
-<p>Pas d'objet trouvé </p>
-{% endif %}
+                var link = $('#phone_trouveur').attr('data-url');
+                            window.location.href = link;
+            }
+        })
 
 
+        }
+
+    });
+
+    function load_objects_finder(){
+
+        var link = "{% url 'receptionner' %}" + $('#phone_trouveur').val();
+                            window.location.href = link;
+    }
+
+    function save_receptionner_objects(){
+        var number_check = $('.number_check').html();
+        if(number_check == '' || number_check == '0'){
+            toastr.error("", "Veuillez selectionner au moins un ojet !!!", {
+                        showMethod: "slideDown",
+                        hideMethod: "slideUp",
+                        timeOut: 2e3,
+                        progressBar: !0
+                    })
+        }
+        else {
+            $('#tab_object tr').each(function (i) {
+            var id1 = $(this).attr("id");
+            if($('#chk-' + id1).is(":checked")){
+                $.ajax({
+                        type: 'GET',
+                        url: "{% url 'valider_reception' %}" + id1,
+                        success: function (response) {
+                            console.log(response)
+
+                            $('#'+id1).remove();
+
+                        }
+                    })
+            }
+
+            });
+            toastr.success("", "All objects save successfully !!!", {
+                                showMethod: "slideDown",
+                                hideMethod: "slideUp",
+                                timeOut: 2e3,
+                                progressBar: !0
+                            })
+        }
+
+    }
+
+    function init_form() {
+        $('#type_select').val('1');
+        $('.autre_type').val('');
+        $('.autre_type').prop('hidden', true);
+        $('.nom_objet').val('');
+        $('.nom_prop').val('');
+        $('.prenom_prop').val('');
+        $('.id_obj').val('');
+        $('.lieu_trouver').val('');
+        $('.description').val('');
+    }
+
+    function charger_objet(id) {
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'getobjet' %}" + id,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                for (var key in response.objet) {
+                    $('.type_objet_rtv').val(response.objet[key].type_objet__nom);
+                    $('.nom_objet_rtv').val(response.objet[key].nom_objet);
+                    $('.nom_prop_rtv').val(response.objet[key].personne__nom);
+                    $('.prenom_prop_rtv').val(response.objet[key].personne__prenom);
+                    $('.phone_rtv').val(response.objet[key].personne__telephone);
+                    $('.date_retrouve').val(response.objet[key].date_enregistrement);
+                }
+
+            },
+            error: function (responce) {
+                alert("An error code")
+            }
+        })
+    }
+
+</script>
 {% endblock %}
+
+
+{% block content %}
+
+<div class="main-content-wrap d-flex flex-column">
+    <div class="breadcrumb">
+        <h1>Receptionner objet</h1>
+        <ul>
+            <li><a href="">Agence</a></li>
+            <li>Receptionner objet</li>
+        </ul>
+    </div>
+    <div class="separator-breadcrumb border-top"></div>
+
+    <div class="row mb-4">
+        <div class="col-md-11">
+            <h4>Save Objects Buy</h4>
+            <p>To save object you must first select its command before saving en tenant compte des quantites de sorte
+                que la
+                quantite totale de cette liste d'objects doit correspondre a la quantite recu de la commande.</p>
+        </div>
+    </div>
+
+    <!-- content goes here -->
+<section class="chekout-page">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="col-12 col-lg-12 col-sm-12">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="phone_trouveur">Telephone Trouveur</label>
+                    </div>
+                    <input id="phone_trouveur" class="form-control col-lg-6 col-sm-12" data-url="{% url 'receptionner' %}" data="{{ error }}" type="text">
+                    <div class="input-group-append">
+                        <button class="input-group-text btn " id="load_command" onclick="load_objects_finder()">Charger</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Object List</div>
+                    <span class="text-muted">Object remaining to save : <span class="obj_remain" data=""
+                                                                              data-obj-recu=""></span></span>
+
+                    <div class="table-responsive">
+                        <table id="tab_object" data-upd="" data-del="" class="display table" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">N°</th>
+                                <th scope="col">Prénom</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Type de l'objet</th>
+                                <th scope="col">Lieu retrouvé</th>
+                                <th scope="col">Situation</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tab_bobject" class="tab_bobject">
+                            {% if objets and objets != None  %}
+                            {% for objet in objets %}
+                            <tr id="{{ objet.id }}">
+                                <th scope="row">
+                                    <label class="checkbox checkbox-outline-info">
+                                        <input class="checkbox-agence" id="chk-{{ objet.id }}" type="checkbox">
+
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <td>{{ objet.numero }}</td>
+                                <td>{{ objet.prenom }}</td>
+                                <td>{{ objet.nom }}</td>
+                                <td>{{ objet.type_objet }}</td>
+                                <td>{{ objet.lieu_trouver }}</td>
+                                <td>{{ objet.situation }}</td>
+                                <td>
+                                    <a href="{% url 'signaler_objet_update' objet.id %}"
+                                       class="btn text-secondary px-0">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row text-right">
+                        <div class="col-lg-12 ">
+                            <button id="save_obj" class="btn btn-success" onclick="save_receptionner_objects()">Save all(<span class="number_check"></span>)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        </div>
+        <!-- end of main content -->
+{% endblock %}
+
