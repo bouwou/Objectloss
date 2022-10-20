@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/customerFormLossOneFragment">
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.myapplication.FirstFragment"
+        android:name="com.example.myapplication.fragment.FirstFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.myapplication.SecondFragment"
+        android:name="com.example.myapplication.fragment.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
@@ -25,4 +25,32 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.myapplication.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/customerFormLossOneFragment"
+        android:name="com.example.myapplication.fragment.CustomerFormLossOneFragment"
+        android:label="@string/title_menu_form_loss_one"
+        tools:layout="@layout/fragment_customer_form_loss_one" >
+        <action
+            android:id="@+id/action_customerFormLossOneFragment_to_customerFormLossTwoFragment"
+            app:destination="@id/customerFormLossTwoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerFormLossTwoFragment"
+        android:name="com.example.myapplication.fragment.CustomerFormLossTwoFragment"
+        android:label="@string/title_menu_form_loss_two"
+        tools:layout="@layout/fragment_customer_form_loss_two" >
+        <action
+            android:id="@+id/action_customerFormLossTwoFragment_to_customerFormLossThreeFragment"
+            app:destination="@id/customerFormLossThreeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerFormLossThreeFragment"
+        android:name="com.example.myapplication.fragment.CustomerFormLossThreeFragment"
+        android:label="@string/title_menu_form_loss_three"
+        tools:layout="@layout/fragment_customer_form_loss_three" />
 </navigation>

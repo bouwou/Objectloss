@@ -9,4 +9,55 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="prompt_type_objet">Type d objet</string>
+    <string name="prompt_nom_objet">Nom objet</string>
+    <string name="prompt_nom_propietaire">Nom proprietaire</string>
+    <string name="prompt_prenom_propietaire">Prenom proprietaire</string>
+
+    <string name="prompt_telephone">Telephone</string>
+    <string name="prompt_lieu_perte">Lieu de  perte</string>
+    <string name="prompt_date_perte">Date de  perte</string>
+
+    <string name="prompt_lieu_residence">Lieu de residence</string>
+    <string name="prompt_date_naissance">Date de naissance</string>
+    <string name="prompt_numero_cni">Telephone</string>
+    <string name="prompt_numero_passeport">Numero passport</string>
+    <string name="prompt_description">Description</string>
+
+    <string name="prompt_button_connexion">Connexion</string>
+    <string name="prompt_button_terminer">Terminer</string>
+    <string name="prompt_button_annuler">Annuler</string>
+
+    <string name="prompt_menu_objet">Objets</string>
+    <string name="prompt_menu_signaler_perdu">Signaler objets</string>
+    <string name="prompt_menu_tsignaler_rouver">Trouver objets</string>
+
+
+    <string name="title_menu_form_loss_one">Formulaire perte 1/3</string>
+    <string name="title_menu_form_loss_two">Formulaire perte 2/3</string>
+    <string name="title_menu_form_loss_three">Formulaire perte 3/3</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_main_drawer">MainActivityDrawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
 </resources>

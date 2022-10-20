@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph2"
+    app:startDestination="@id/customerAuthOneFragment">
+    <fragment
+        android:id="@+id/customerAuthOneFragment"
+        android:name="com.example.myapplication.fragment.CustomerAuthOneFragment"
+        android:label="Auth - 1/2"
+        tools:layout="@layout/fragment_customer_auth_one" >
+        <action
+            android:id="@+id/action_customerAuthOneFragment_to_customerAuthTwoFragment"
+            app:destination="@id/customerAuthTwoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerAuthTwoFragment"
+        android:name="com.example.myapplication.fragment.CustomerAuthTwoFragment"
+        android:label="Auth - 2/2"
+        tools:layout="@layout/fragment_customer_auth_two" />
+</navigation>

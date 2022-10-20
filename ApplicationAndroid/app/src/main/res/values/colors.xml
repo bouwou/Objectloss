@@ -7,4 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="xd_blue_2">#172B4D</color>
+    <color name="xd_white">#FFFFFF</color>
+    <color name="xd_grey_1">#F8F9FA</color>
+    <color name="xd_blue_1">#003473</color>
+    <color name="xd_red">#F44336</color>
+    <color name="xd_green">#4CAF50</color>
+    <color name="xd_indigo">#663399</color>
+    <color name="xd_indigo_dark">#4a0072</color>
+
+    <color name="xd_grey_2">#CED4DA</color>
+    <color name="xd_grey_3">#70657B</color>
 </resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_object_list"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Object list" />
+        <item
+            android:id="@+id/nav_form_loss"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Signaler objet perdu" />
+        <item
+            android:id="@+id/nav_form_object_charge"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Charger objet" />
+
+        <item
+            android:id="@+id/nav_form_my_object_charge"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Mes objets" />
+<!--        <item-->
+<!--            android:id="@+id/nav_object_list"-->
+<!--            android:icon="@drawable/ic_menu_camera"-->
+<!--            android:title="Signaler objet trouver" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_object_list"-->
+<!--            android:icon="@drawable/ic_menu_camera"-->
+<!--            android:title="Solde" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_object_list"-->
+<!--            android:icon="@drawable/ic_menu_camera"-->
+<!--            android:title="Historique" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_object_list"-->
+<!--            android:icon="@drawable/ic_menu_camera"-->
+<!--            android:title="Assistance" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_object_list"-->
+<!--            android:icon="@drawable/ic_menu_camera"-->
+<!--            android:title="Information" />-->
+    </group>
+</menu>
