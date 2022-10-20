@@ -16,7 +16,7 @@ class ObjectListAdapter(
     /*var uploadSelectItemImpl: UploadSelectItemImpl,*/
     /*var textViewTotalPanier:TextView*/
 ) :
-    RecyclerView.Adapter<ObjectListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<ObjectListAdapter.ViewHolder>(), Filterable  {
 
     lateinit var listdataSearch: MutableList<ObjectClass>
     private var counter: Int = 0
@@ -38,7 +38,7 @@ class ObjectListAdapter(
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-//        viewHolder.textViewCartItem.text = listdataSearch[position].menus!!.name
+        viewHolder.textViewNumber.text = listdataSearch[position].id
         viewHolder.cardItemObject.setOnClickListener{ v ->
             onClick(
                 v,
@@ -80,5 +80,40 @@ class ObjectListAdapter(
 
     }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(p0: CharSequence?): Filter.FilterResults {
+                println("performFiltering")
+                println("${dataSet.size}")
+                println("${listdataSearch.size}")
+                val listFiltered: MutableList<ObjectClass> = arrayListOf()
+                if (p0 == null || p0.isEmpty()) {
+                    listFiltered.addAll(dataSet)
+                } else {
+                    val filterPattern: String = p0.toString().lowercase().trim()
+                    for (item in dataSet) {
+                        if (item.id!!.lowercase().contains(filterPattern)) {
+                            listFiltered.add(item)
+                        }
+                    }
+                }
+                val filterResult = FilterResults()
+                filterResult.values = listFiltered
+                println("$filterResult")
+
+                return filterResult
+            }
+
+            override fun publishResults(p0: CharSequence?, p1: Filter.FilterResults?) {
+                println("publishResults")
+                listdataSearch.clear()
+                println("${p1!!.values}")
+                println("${dataSet.size}")
+                println("${listdataSearch.size}")
+                listdataSearch.addAll(p1?.values as Collection<ObjectClass>)
+                notifyDataSetChanged()
+            }
+        }
+    }
 
 }
