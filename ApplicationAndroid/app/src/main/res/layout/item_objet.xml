@@ -2,19 +2,21 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardItemObject"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_margin="12dp"
-    app:cardBackgroundColor="#FFFFFF"
+    android:background="@drawable/shape_two"
+    android:elevation="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
-    android:id="@+id/cardItemObject"
+    app:cardElevation="8dp"
     tools:layout_editor_absoluteX="10dp"
     tools:layout_editor_absoluteY="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_two">
 
         <TextView
             android:id="@+id/textViewNumber"

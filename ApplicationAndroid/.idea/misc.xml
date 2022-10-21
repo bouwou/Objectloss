@@ -3,10 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/drawable-v24/drawer_item.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/drawable-v24/shape_one.xml" value="0.1" />
+        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/drawable-v24/shape_two.xml" value="0.196" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/activity_main_drawer.xml" value="0.17654508611955422" />
+        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/activity_main_drawer.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/app_bar_main_activity_drawer.xml" value="0.17654508611955422" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/content_home.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/content_main.xml" value="0.1" />
@@ -18,14 +20,15 @@
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_customer_form_loss_three.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_customer_form_loss_two.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_customer_my_object_list.xml" value="0.1" />
-        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_customer_object_list.xml" value="0.6996291718170581" />
+        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_customer_object_list.xml" value="0.33" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_first2.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_gallery.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/fragment_login.xml" value="0.18" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/item_objet.xml" value="0.40789473684210525" />
-        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/nav_header_main_activity_drawer.xml" value="0.1334853090172239" />
+        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/layout/nav_header_main_activity_drawer.xml" value="0.5" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/menu/activity_main_drawer_drawer.xml" value="0.1" />
         <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/menu/main_activity_drawer.xml" value="0.1" />
+        <entry key="..\:/Users/ludovic ngono/PycharmProjects/Objectloss/ApplicationAndroid/app/src/main/res/menu/menu_main.xml" value="0.1" />
       </map>
     </option>
   </component>
